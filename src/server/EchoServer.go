@@ -9,7 +9,8 @@ import (
 	"flag"
 	"net"
 	"os"
-	"log"
+	"syslog"
+	"io"
 )
 
 var hostName *string = flag.String("h", "127.0.0.1", "address to listen on")
@@ -17,7 +18,8 @@ var portNumber *string = flag.String("p", "4242", "port number to listen to")
 
 func test(err os.Error, mesg string) {
     if err!=nil {
-        log.Fatalf("Server error: %v", mesg)
+        syslog, _ := syslog.New(syslog.LOG_ERR, "echo server")
+        _, err = io.WriteString(syslog, mesg)
         os.Exit(-1);
     }
 }
