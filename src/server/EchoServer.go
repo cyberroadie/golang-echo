@@ -13,8 +13,18 @@ import (
 	"io"
 )
 
-var hostName *string = flag.String("h", "127.0.0.1", "address to listen on")
-var portNumber *string = flag.String("p", "4242", "port number to listen to")
+type Settings struct {
+	string PortNumber 
+	string Hostname
+	string Message
+	bool Verbose
+	bool Sctp
+}
+
+var settings = Settings{
+	PortNumber: flag.String("p", "4242", "port number to listen to")
+	Hostname: flag.String("h", "127.0.0.1", "address to listen on") 
+}
 
 func test(err os.Error, mesg string) {
     if err!=nil {
@@ -26,9 +36,9 @@ func test(err os.Error, mesg string) {
 
 func main() {
 	flag.Parse()
-	fmt.Printf("Listening on: %v:%v\n", *hostName, *portNumber)
+	fmt.Printf("Listening on: %v:%v\n", *settings.Hostname, *settings.PortNumber)
 
-    netlisten, err := net.Listen("tcp", *hostName + ":" + *portNumber)
+    netlisten, err := net.Listen("tcp", *settings.Hostname, *settings.PortNumber)
     test(err, "Listen() error")
     defer netlisten.Close()
 
